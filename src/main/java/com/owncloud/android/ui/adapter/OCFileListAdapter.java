@@ -973,8 +973,8 @@ public class OCFileListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 case FAVORITE_SEARCH:
                     type = VirtualFolderType.FAVORITE;
                     break;
-                case PHOTO_SEARCH:
-                    type = VirtualFolderType.PHOTOS;
+                case GALLERY_SEARCH:
+                    type = VirtualFolderType.GALLERY;
                     break;
                 default:
                     type = VirtualFolderType.NONE;
@@ -993,10 +993,8 @@ public class OCFileListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             }
         }
 
-        if (searchType != ExtendedListFragment.SearchType.PHOTO_SEARCH &&
-                searchType != ExtendedListFragment.SearchType.PHOTOS_SEARCH_FILTER &&
-                searchType != ExtendedListFragment.SearchType.RECENTLY_MODIFIED_SEARCH &&
-                searchType != ExtendedListFragment.SearchType.RECENTLY_MODIFIED_SEARCH_FILTER) {
+        if (searchType != ExtendedListFragment.SearchType.GALLERY_SEARCH &&
+            searchType != ExtendedListFragment.SearchType.RECENTLY_MODIFIED_SEARCH) {
             FileSortOrder sortOrder = preferences.getSortOrderByFolder(folder);
             mFiles = sortOrder.sortCloudFiles(mFiles);
         } else {
@@ -1056,15 +1054,15 @@ public class OCFileListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     private void parseVirtuals(List<Object> objects, ExtendedListFragment.SearchType searchType) {
         VirtualFolderType type;
-        boolean onlyImages = false;
+        boolean onlyMedia = false;
 
         switch (searchType) {
             case FAVORITE_SEARCH:
                 type = VirtualFolderType.FAVORITE;
                 break;
-            case PHOTO_SEARCH:
-                type = VirtualFolderType.PHOTOS;
-                onlyImages = true;
+            case GALLERY_SEARCH:
+                type = VirtualFolderType.GALLERY;
+                onlyMedia = true;
 
                 int lastPosition = objects.size() - 1;
 
@@ -1088,7 +1086,7 @@ public class OCFileListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             FileStorageUtils.searchForLocalFileInDefaultPath(ocFile, user.toPlatformAccount());
 
             try {
-                if (ExtendedListFragment.SearchType.PHOTO_SEARCH == searchType) {
+                if (ExtendedListFragment.SearchType.GALLERY_SEARCH == searchType) {
                     mStorageManager.saveFile(ocFile);
                 } else {
 
@@ -1108,7 +1106,7 @@ public class OCFileListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     }
                 }
 
-                if (!onlyImages || MimeTypeUtil.isImage(ocFile)) {
+                if (!onlyMedia || MimeTypeUtil.isImage(ocFile) || MimeTypeUtil.isVideo(ocFile)) {
                     mFiles.add(ocFile);
                 }
 
@@ -1129,7 +1127,7 @@ public class OCFileListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     public void showVirtuals(VirtualFolderType type, boolean onlyImages, FileDataStorageManager storageManager) {
         mFiles = storageManager.getVirtualFolderContent(type, onlyImages);
 
-        if (VirtualFolderType.PHOTOS == type) {
+        if (VirtualFolderType.GALLERY == type) {
             mFiles = FileStorageUtils.sortOcFolderDescDateModifiedWithoutFavoritesFirst(mFiles);
         }
 
