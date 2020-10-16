@@ -806,8 +806,12 @@ public class FileUploader extends Service
             } else {
                 Intent intent;
                 if (uploadResult.getCode().equals(ResultCode.SYNC_CONFLICT)) {
+                    UploadsStorageManager uploadsStorageManager = new UploadsStorageManager(accountManager,
+                                                                                            getBaseContext().getContentResolver());
+
                     intent = ConflictsResolveActivity.createIntent(upload.getFile(),
                                                                    upload.getAccount(),
+                                                                   upload.getOCUploadId(),
                                                                    Intent.FLAG_ACTIVITY_CLEAR_TOP,
                                                                    this);
                 } else {
