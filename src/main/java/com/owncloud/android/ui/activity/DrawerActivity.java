@@ -330,7 +330,7 @@ public abstract class DrawerActivity extends ToolbarActivity
         switch (menuItem.getItemId()) {
             case R.id.nav_all_files:
                 showFiles(false);
-                if ((this instanceof FileDisplayActivity) &&
+                if (this instanceof FileDisplayActivity &&
                     !(((FileDisplayActivity) this).getListOfFilesFragment() instanceof PhotoFragment)) {
                     ((FileDisplayActivity) this).browseToRoot();
                     EventBus.getDefault().post(new ChangeMenuEvent());
